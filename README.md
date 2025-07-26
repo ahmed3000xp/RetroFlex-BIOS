@@ -17,15 +17,13 @@ RetroFlex BIOS is a Free and Open Source Legacy MBR BIOS.
 
 Before you compile RetroFlex BIOS, you need to make sure you have the RetroFlex BIOS toolchain compiled by running:
 
-```bash
-ls tools```
+`ls tools`
 
 WARNING: The toolchain build script automatically uses all your CPU's cores and threads. You have been warned.
 If you didn't find a directory named `RetroFlex-BIOS-cross` then you have to compile the RetroFlex BIOS toolchain by running these commands:
 
-```bash
-cd tools/cross
-./build-cross.sh```
+`cd tools/cross
+./build-cross.sh`
 
 After it finishes the toolchain should be compiled. To test it just compile RetroFlex BIOS by following the instructions in the Compiling and Running RetroFlex BIOS section.
 If you encounter an error read it carefully and search it up or contact me.
