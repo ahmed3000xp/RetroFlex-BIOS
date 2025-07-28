@@ -40,12 +40,6 @@ If you're on an x86 or x86_64 machine, you can run RetroFlex BIOS with KVM using
 
 `make qemu_kvm`
 
-Note: KVM currently mishandles the 16-bit to 32-bit transitions in RetroFlex BIOS, causing freezes. Works perfectly on QEMU without KVM, PCem, 86Box, and real 386/486 hardware.
-
-#### Issues
-
-When you run QEMU with KVM the BIOS will freeze when switching to 32-bit Protected Mode and the BIOS freezes when far jumping into a 32-bit Protected Mode entry point. The BIOS currently works perfectly on PCem, 86Box, real 386/486 hardware and QEMU without KVM acceleration 
-
 #### License
 
 This project is licensed under the GNU GPL-3.0 license.

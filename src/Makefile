@@ -56,4 +56,5 @@ cross:
 	$(TOOLS_DIR)/cross/build-cross.sh
 
 clean:
-	rm -f $(BUILD_DIR)/*
+	rm -rf $(BUILD_DIR)
+	mkdir $(BUILD_DIR)

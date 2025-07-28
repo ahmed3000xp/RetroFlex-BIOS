@@ -35,10 +35,10 @@ SECTIONS
 
     .rodata _rom_vma_current_addr : AT(_rom_file_offset) {
         _rodata_start = .;
-        *(.rodata)
+        *(.rodata*)
         _rodata_end = .;
     }
-    _rom_file_offset = _rom_file_offset + SIZEOF(.rodata);
+    _rom_file_offset += SIZEOF(.rodata);
     _rom_vma_current_addr = _rom_file_offset + 0xf0000;
 
     .data 0x8000a : AT(_rom_file_offset) {
@@ -48,15 +48,15 @@ SECTIONS
     }
     _data_load_start = LOADADDR(.data);
     _rom_file_offset += SIZEOF(.data);
-    _rom_vma_current_addr = _rom_file_offset + 0x8000a;
+    _rom_vma_current_addr = _rom_file_offset + 0x80000;
 
-    .bss 0x8500a : AT(_rom_file_offset) {
+    .bss _rom_vma_current_addr : AT(_rom_file_offset) {
         _bss_start = .;
         *(.bss)
         _bss_end = .;
     }
     _rom_file_offset += SIZEOF(.bss);
-    _rom_vma_current_addr = _rom_file_offset + 0x8500a;
-
+    _rom_vma_current_addr = _rom_file_offset;
+    
     end = .;
 }

@@ -13,7 +13,7 @@ SECTIONS
     }
 
     . = 0x0000;
-    
+
     .bios : {
         *(.bios)
     }
@@ -34,13 +34,13 @@ SECTIONS
 
     .rodata _rom_vma_current_addr : AT(_rom_file_offset) {
         _rodata_start = .;
-        *(.rodata)
+        *(.rodata*)
         _rodata_end = .;
     }
-    _rom_file_offset = _rom_file_offset + SIZEOF(.rodata);
+    _rom_file_offset += SIZEOF(.rodata);
     _rom_vma_current_addr = _rom_file_offset + 0xf0000;
 
-    .data 0x80000 : AT(_rom_file_offset) {
+    .data 0x8000a : AT(_rom_file_offset) {
         _data_start = .;
         *(.data)
         _data_end = .;
@@ -49,13 +49,13 @@ SECTIONS
     _rom_file_offset += SIZEOF(.data);
     _rom_vma_current_addr = _rom_file_offset + 0x80000;
 
-    .bss 0x85000 : AT(_rom_file_offset) {
+    .bss _rom_vma_current_addr : AT(_rom_file_offset) {
         _bss_start = .;
         *(.bss)
         _bss_end = .;
     }
     _rom_file_offset += SIZEOF(.bss);
-    _rom_vma_current_addr = _rom_file_offset + 0x85000;
+    _rom_vma_current_addr = _rom_file_offset;
 
     end = .;
 }
