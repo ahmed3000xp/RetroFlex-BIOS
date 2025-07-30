@@ -16,12 +16,15 @@
  */
 
 #include "headers/stdint.h"
+#include "headers/stdio.h"
 
 extern uint8_t _data_load_start[];
 extern uint8_t _data_start[];
 extern uint8_t _data_end[];
 
 void setup_sections_c() {
+    puts("Setting up ELF sections\n");
+
     uint8_t *src = _data_load_start;
     uint8_t *dst = _data_start;
     while (dst < _data_end)

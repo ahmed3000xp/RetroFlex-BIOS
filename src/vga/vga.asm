@@ -45,7 +45,7 @@ setup_vga:
     mov ax, 0xf000
     mov ds, ax
     mov si, invalid_vga_rom_sig_string
-    call dbg_bios_puts
+    call vga_bios_puts
 
 .return:
     mov ax, 0x9000
@@ -67,12 +67,8 @@ vga_bios_puts:
     or al, al
     jz .return
 
-    push ax
     mov ah, 0x0e
     int 0x10
-    mov dx, 0xe9
-    pop ax
-    out dx, al
 
     jmp .loop
 .return:

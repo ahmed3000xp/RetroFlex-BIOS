@@ -37,12 +37,7 @@ bits 32
 
 section .bios32bit
 setup_pci_protected_mode_entry:
-    push setup_pci_start_string
-    call puts
-    add esp, 4
     call pci_init
     call pci_list_devices
     mov bx, setup_pci_return_to_caller
     jmp main_bios_switch_16_bit
-
-setup_pci_start_string: db "Setting up PCI", 0xa, 0

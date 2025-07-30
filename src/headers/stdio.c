@@ -21,6 +21,13 @@ void putc(char c){
     outb(0xe9, c);
 }
 
+void puts(const char *s){
+    while(*s){
+        putc(*s);
+        s++;
+    }
+}
+
 void printf(const char *fmt, ...){
     int32_t *argp = (int32_t*)&fmt;
     int32_t state = PRINTF_STATE_START;

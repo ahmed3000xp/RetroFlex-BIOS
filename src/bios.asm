@@ -13,6 +13,7 @@ global main_bios_switch_16_bit ; MUST CALL THIS IN 32-BIT PROTECTED MODE. DON'T 
 extern setup_sections
 extern setup_pci
 
+extern setup_i440fx_dram
 extern setup_ivt
 extern setup_vga
 extern vga_bios_puts
@@ -41,6 +42,7 @@ bios_start:
     jmp .continue_exec1
 
 .continue_exec1:
+    call setup_i440fx_dram ; Change the function name based on the chipset you have and the currently supported chipsets in RetroFlex-BIOS like if you have a Q35 chipset (not currently supported in RetroFlex-BIOS) then change setup_i440fx_dram to setup_q35_dram
     call setup_ivt
     call setup_main_gdt
     call setup_sections

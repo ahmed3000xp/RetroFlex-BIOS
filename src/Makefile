@@ -22,6 +22,7 @@ bios:
 	# 16-bit Real Mode Assembly code
 	$(AS) $(ASFLAGS) bootstrap/bootstrap.asm -o $(BUILD_DIR)/bootstrap.o
 	$(AS) $(ASFLAGS) bios.asm -o $(BUILD_DIR)/bios.o
+	$(AS) $(ASFLAGS) i440fx/dram/dram.asm -o $(BUILD_DIR)/i440fx_dram.o
 	$(AS) $(ASFLAGS) ivt/ivt.asm -o $(BUILD_DIR)/ivt.o
 	$(AS) $(ASFLAGS) vga/vga.asm -o $(BUILD_DIR)/vga.o
 

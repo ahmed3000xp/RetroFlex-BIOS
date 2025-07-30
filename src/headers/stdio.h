@@ -34,6 +34,6 @@
 #define PRINTF_LENGTH_LONG_LONG 4
 
 void putc(char c);
-extern void puts(const char *s); // Use the assembly implementation of the puts function
+void puts(const char *s);
 void printf(const char *fmt, ...);
 int32_t *printf_number(int32_t *argp, int length, bool sign, int radix);

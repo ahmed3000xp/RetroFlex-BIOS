@@ -21,8 +21,38 @@
 #include "../headers/stdio.h"
 #include "../headers/util.h"
 
+#define PCI_MAX_DEVICES 40
+
 #define PCI_CONFIG_ADDRESS_PORT 0xcf8
 #define PCI_CONFIG_DATA_PORT 0xcfc
+
+#define PCI_BAR_ADDRESSING_TYPE_MEMORY 0
+#define PCI_BAR_ADDRESSING_TYPE_IO 1
+
+#define PCI_MEMORY_BAR_TYPE_16_BIT 1
+#define PCI_MEMORY_BAR_TYPE_32_BIT 0
+#define PCI_MEMORY_BAR_TYPE_64_BIT 2
+
+#define PCI_POST_CODE_MAPPING_32_BIT_BAR 0xcfc0
+#define PCI_POST_CODE_MAPPING_64_BIT_BAR 0xcfc1
+#define PCI_POST_CODE_MAPPING_IO_BAR 0xcfc2
+#define PCI_POST_CODE_MAPPING_ROM_BAR 0xcfc3
+#define PCI_POST_CODE_UNSUPPORTED_BAR 0xcfc4
+#define PCI_POST_CODE_COPYING_OPTION_ROM_TO_RAM 0xcfc5
+#define PCI_POST_CODE_SCANNING_DEVICES 0xcfcd
+#define PCI_POST_CODE_DETECTED_DEVICE 0xcfcc
+#define PCI_POST_CODE_DETECTED_CONTROLLER 0xcfce
+#define PCI_POST_CODE_DIDNT_DETECT_CONTROLLER 0xcfcf
+
+#define PCI_DEVICE_CLASS_CODE_DISPLAY_VGA_CONTROLLER 0x030000
+#define PCI_DEVICE_CLASS_CODE_DISPLAY_8514_COMPATIBLE 0x030001
+#define PCI_DEVICE_CLASS_CODE_DISPLAY_XGA_CONTROLLER 0x030100
+#define PCI_DEVICE_CLASS_CODE_DISPLAY_3D_CONTROLLER 0x030200 // The PCI spec says that 3D controllers are not always VGA-Compatible, but with my testing, most Gaming and basic GPUs (Graphics Processing Units) are VGA-Compatible, even ones with 3D Controller class codes
+#define PCI_DEVICE_CLASS_CODE_DISPLAY_OTHER 0x038000
+
+#define PCI_DEVICE_CLASS_CODE_MASK 0x00ff0000
+#define PCI_DEVICE_SUBCLASS_CODE_MASK 0x0000ff00
+#define PCI_DEVICE_PROG_IF_CODE_MASK 0x000000ff
 
 struct __attribute__((packed)) pci_header_type_0 {
     uint16_t vendor_id;
@@ -129,6 +159,25 @@ struct __attribute__((packed)) pci_header_type_2 {
     uint32_t pc_card_legacy_base_address;
 };
 
+struct __attribute__((packed)) pci_memory_bar {
+    bool addressing_type : 1;
+    uint8_t bar_type : 2;
+    bool prefetchable : 1;
+    uint32_t bar_address : 28;
+};
+
+struct __attribute__((packed)) pci_io_bar {
+    bool addressing_type : 1;
+    bool reserved : 1;
+    uint32_t bar_address : 30;
+};
+
+struct __attribute__((packed)) pci_rom_bar {
+    bool enable_bit : 1;
+    uint16_t reserved : 10;
+    uint32_t bar_address : 21;
+};
+
 struct __attribute__((packed)) pci_device_info {
     uint8_t device_bus;
     uint8_t device_slot;
@@ -144,8 +193,8 @@ struct __attribute__((packed)) pci_device_info {
     void (*device_interrupt_handler)(); // There are no drivers for any PCI device in the time being so this will always be NULL 
 };
 
-extern uint32_t pci_devices_headers[70][sizeof(struct pci_header_type_2)];
-extern struct pci_device_info pci_devices[70];
+extern uint32_t pci_devices_headers[PCI_MAX_DEVICES][sizeof(struct pci_header_type_2)];
+extern struct pci_device_info pci_devices[PCI_MAX_DEVICES];
 extern struct pci_device_info *pci_devices_irqs[16][5];
 
 bool pci_init();
@@ -153,6 +202,7 @@ uint32_t pci_config_read(uint8_t bus, uint8_t device, uint8_t func, uint8_t reg_
 void pci_config_write(uint8_t bus, uint8_t device, uint8_t func, uint8_t reg_offset, uint32_t data);
 void pci_read_header(uint8_t bus, uint8_t device, uint8_t func, struct pci_device_info *pci_device);
 void pci_setup_device(uint8_t bus, uint8_t device, uint8_t func, struct pci_device_info *pci_device);
+void pci_init_device(uint8_t bus, uint8_t device, uint8_t func); // This function supports only specific Prog IFs, class codes and subclass codes for PCI devices
 void pci_scan_devices();
-void pci_claim_device(struct pci_device_info *pci_device, void (*device_interrupt_handler)());
 void pci_list_devices();
+void pci_claim_device(struct pci_device_info *pci_device, void (*device_interrupt_handler)());

@@ -135,6 +135,22 @@ isr5: ; Bound range exceeded (Not implemented)
 isr7: ; Processor Extension Not Available (Not implemented)
     iret
 isr10: ; A filler int 0x10 handler for Video Services
+    cli
+
+    cmp ah, 0xe ; Check if the Teletype function is needed
+    je .teletype
+    jmp .failure
+.teletype:
+    push dx
+    mov dx, 0xe9
+    out dx, al
+    pop dx
+    jmp .return
+
+.failure:
+    stc
+.return:
+    sti
     iret
 
 irq0:
